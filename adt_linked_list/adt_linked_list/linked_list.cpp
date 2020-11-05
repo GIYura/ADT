@@ -77,7 +77,7 @@ node_t* create_list(int size, bool order) {
 			}
 			ret = head;
 		}
-		printf("List succecfully created\r\n");
+		printf("List created\r\n");
 	}
 	else {
 		printf("The size of linked list should be > 0\r\n");
@@ -86,7 +86,7 @@ node_t* create_list(int size, bool order) {
 }
 
 //
-void clear_list(node_t* head) {
+node_t* clear_list(node_t* head) {
 	node_t* temp;
 
 	if (head == NULL) {
@@ -99,5 +99,8 @@ void clear_list(node_t* head) {
 			head = head->next;
 			free(temp);
 		}
+		head = NULL;
 	}
+	printf("List deleted\r\n");
+	return head;
 }

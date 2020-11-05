@@ -15,4 +15,4 @@ void delete_node(node_t*);
 node_t* create_list(int size, bool order);
 
 //
-void clear_list(node_t* head);
+node_t* clear_list(node_t* head);

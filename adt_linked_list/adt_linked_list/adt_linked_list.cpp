@@ -19,8 +19,7 @@ int main()
 
     print_list(list1);
 
-    clear_list(list1);
-    list1 = NULL;
+    list1 = clear_list(list1);
 
     print_list(list1);
 }
