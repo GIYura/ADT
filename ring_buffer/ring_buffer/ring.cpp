@@ -17,28 +17,29 @@ static bool is_empty(ring_t* r) {
 	return false;
 }
 
-static void next_head(ring_t* r) {
-	r->head = (r->head + 1) % r->buffer_sz;
+static int next_index(ring_t* r, int idx) {
+	return (idx + 1) % r->buffer_sz;
 }
-
-static void next_tail(ring_t* r) {
-	r->tail = (r->tail + 1) % r->buffer_sz;
-}
+static void push(ring_t*, int);
+static bool pop(ring_t*, int*);
 
 status_t ring_init(ring_t* r, int s, bool o) {
 	assert(r);
 	assert(s);
 
-	//r->buffer = malloc(sizeof(int) * s + 1);
-	//if (!r->buffer) {
-	//	printf("Can'r allocate memory\r\n");
-	//	return ERROR;
-	//}
+	r->buffer = malloc(sizeof(int) * s);
+	if (!r->buffer) {
+		printf("Can'r allocate memory\r\n");
+		return ERROR;
+	}
 
 	r->buffer_sz = s;
 	r->head = 0;
 	r->tail = 0;
 	r->over = o;
+
+	r->push = &push;
+	r->pop = &pop;
 
 	return SUCCESS;
 }
@@ -54,27 +55,27 @@ void ring_deinit(ring_t* r) {
 	printf("Ring buffer deinit\r\n");
 }
 
-void ring_push(ring_t* r, int v) {
+void push(ring_t* r, int v) {
 	assert(r);
 
 	if (is_full(r)) {
-		next_tail(r);
-//		r->tail = (r->tail + 1) % RING_BUFFER_SZ;
+		if (!r->over) {
+			return;
+		}
+		r->tail = next_index(r, r->tail);
 	}
 	r->buffer[r->head] = v;
-//	r->head = (r->head + 1) % RING_BUFFER_SZ;
-	next_head(r);
+	r->head = next_index(r, r->head);
 	printf("Push value\t:\t[%d]\r\n", v);
 }
 
-bool ring_pop(ring_t* r, int* ret_val) {
+bool pop(ring_t* r, int* ret_val) {
 	assert(r);
 
 	if (is_empty(r)) {
 		return false;
 	}
 	*ret_val = r->buffer[r->tail];
-//	r->tail = (r->tail + 1) % RING_BUFFER_SZ;
-	next_tail(r);
+	r->tail = next_index(r, r->tail);
 	return true;
 }

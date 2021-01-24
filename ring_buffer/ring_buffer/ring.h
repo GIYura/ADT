@@ -11,18 +11,20 @@ typedef enum {
 }status_t;
 
 typedef struct RING {
-	int buffer[RING_BUFFER_SZ];
+	int* buffer;
 	int buffer_sz;
 	int head;
 	int tail;
 	bool over;
+	void (*push)(struct RING*, int);
+	bool (*pop)(struct RING*, int*);
 }ring_t;
 
 status_t ring_init(ring_t*, int, bool);
 void ring_deinit(ring_t*);
 
-void ring_push(ring_t*, int);
-bool ring_pop(ring_t*, int*);
+//void ring_push(ring_t*, int);
+//bool ring_pop(ring_t*, int*);
 
 #endif // !_RING_H
 

@@ -13,23 +13,26 @@ int main()
     printf("| Ring buffer example |\r\n");
     printf("-----------------------\r\n");
 
-    if (ring_init(&ring, RING_BUFFER_SZ, true) == SUCCESS) {
+    if (ring_init(&ring, RING_BUFFER_SZ + 1, true) == SUCCESS) {
         printf("Ring buffer created\r\n");
     }
     else {
         printf("Ring buffer NOT created\r\n");
     }
-        
-    for (int i = 0; (i < RING_BUFFER_SZ + 10); i++) {
-        ring_push(&ring, i * 10);
-    }
+            
+//    ring_push(&ring, 123);
+//    ring_push(&ring, 1234);
+//    ring_push(&ring, 12345);
+    ring.push(&ring, 12);
+    ring.push(&ring, 123);
+    ring.push(&ring, 1234);  
 
     printf("-----------------------\r\n");
 
     int ret_val;
-    for (int i = 0; i < (RING_BUFFER_SZ + 1); i++)
+    for (int i = 0; i < (100); i++)
     {
-        if (ring_pop(&ring, &ret_val)) {
+        if (ring.pop(&ring, &ret_val)) {
             printf("Pop value\t:\t[%d]\r\n", ret_val);
         }
     }
